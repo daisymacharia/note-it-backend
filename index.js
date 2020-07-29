@@ -1,20 +1,57 @@
-import express from 'express'
-import mongoose from "mongoose"
-import routes from './api/routes'
+import cors from "cors";
+import express from "express";
+import bodyParser from "body-parser";
+import jwt from "express-jwt";
+import jwks from "jwks-rsa";
+import routes from "./api/routes";
+import mongoose from "mongoose";
+import { isTokenValid } from "./validate";
+import { graphqlHTTP } from "express-graphql";
+import schema from "./api/schema";
 
-mongoose.Promise = global.Promise
-mongoose
-  .connect("mongodb://localhost/notetaking_db", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-})
+const expressPlayground = require("graphql-playground-middleware-express")
+  .default;
 
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb://localhost/notetaking_db", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+});
 
-const app = express()
-const port = 4300
-routes(app)
+const appPort = 3000;
+const appOrigin = `http://localhost:${appPort}`;
+
+const loggingMiddleware = async (req, res, next) => {
+  const { authorization } = req.headers;
+  if (authorization) {
+    await isTokenValid(authorization);
+  }
+  next();
+};
+
+const app = express();
+
+app.use(cors({ origin: appOrigin, credentials: true }));
+
+app.use(
+  "/graphql",
+  bodyParser.json(),
+  graphqlHTTP((req) => ({
+    schema,
+    graphiql: true,
+    context: { token: req.headers.authorization },
+  }))
+);
+
+app.get("/playground", expressPlayground({ endpoint: "/graphql" }));
+
+app.get("/authorized", function (req, res) {
+  res.send("Secured Resource");
+});
+
+const port = 4300;
 
 app.listen(port, () => {
   console.log(`Server is running on PORT  http://localhost:${port}`);
-})
+});

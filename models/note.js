@@ -1,19 +1,28 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const NoteShema = new Schema({
   title: {
     type: String,
-    required: true
+    required: true,
+  },
+  participants: {
+    type: [Object],
+    required: true,
+  },
+  organization: {
+    type: String,
+    required: true,
   },
   body: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
-  }
-})
+    default: Date.now,
+  },
+});
 
-export default mongoose.model('note', NoteShema) ;
+const Note = "note";
+export default mongoose.model(Note, NoteShema);
