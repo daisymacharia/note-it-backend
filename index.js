@@ -56,5 +56,7 @@ app.get("/authorized", function (req, res) {
 const port = 4300;
 
 app.listen(port, () => {
-  console.log(`Server is running on PORT  http://localhost:${port}`);
+  console.log(
+    `Server is running on PORT  ${process.env.PORT} || http://localhost:${port} `
+  );
 });
