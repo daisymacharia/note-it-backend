@@ -13,11 +13,14 @@ const expressPlayground = require("graphql-playground-middleware-express")
   .default;
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/notetaking_db", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-});
+mongoose.connect(
+  `mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds014388.mlab.com:14388/note-taking-api`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  }
+);
 
 const appPort = 3000;
 const appOrigin = `http://localhost:${appPort}`;
