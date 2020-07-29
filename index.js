@@ -53,7 +53,7 @@ app.get("/authorized", function (req, res) {
   res.send("Secured Resource");
 });
 
-const port = 4300;
+const port = process.env.PORT || 4300;
 
 app.listen(port, () => {
   console.log(
