@@ -22,8 +22,7 @@ mongoose.connect(
   }
 );
 
-const appPort = 3000;
-const appOrigin = `http://localhost:${appPort}`;
+const appOrigin = process.env.APP;
 
 const loggingMiddleware = async (req, res, next) => {
   const { authorization } = req.headers;
