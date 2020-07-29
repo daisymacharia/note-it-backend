@@ -16,7 +16,7 @@ const typeDefs = `
 
   type Query {
     getNote(_id: ID!): Note
-    allNotes: [Note]
+    allNotes(filter: NotesFilter, orderBy: NoteOrderByInput): [Note]
   }
 
   type Person {
@@ -29,6 +29,21 @@ const typeDefs = `
     createNote(input: NoteInput): Note
     updateNote(_id: ID!, input: NoteInput): Note
     deleteNote(_id: ID!): Note
+  }
+
+  input NotesFilter {
+    OR: [NotesFilter!]
+    title_contains: String
+    organization_contains: String
+  }
+
+  input NoteOrderByInput {
+    date: Sort
+  }
+
+  enum Sort {
+    asc
+    desc
   }
 
   input PersonInput {
